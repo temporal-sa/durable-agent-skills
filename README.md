@@ -103,6 +103,8 @@ link to the run in the Temporal Web UI. The left rail's **Recent activity** feed
 then updates with the ledger entries the workflow wrote, so it reflects only
 money that actually moved.
 
+To present the demo, follow [RUNBOOK.md](RUNBOOK.md): the walkthrough beat by beat, and where in the code each part happens.
+
 ## Configuration
 
 All variables are optional except `ANTHROPIC_API_KEY`. Copy `.env.example` to

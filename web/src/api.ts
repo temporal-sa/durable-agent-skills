@@ -68,3 +68,21 @@ export async function fetchTransactions(): Promise<Transaction[]> {
   const data = (await res.json()) as { transactions: Transaction[] };
   return data.transactions;
 }
+
+export interface UiConfig {
+  temporal_ui_url: string | null;
+  temporal_ui_namespace: string | null;
+}
+
+// Fetched once per page load and shared by every card. null when the API is
+// unreachable or predates /api/config; callers keep their build-time values.
+let uiConfig: Promise<UiConfig | null> | null = null;
+
+export function fetchUiConfig(): Promise<UiConfig | null> {
+  if (!uiConfig) {
+    uiConfig = fetch(`${BASE}/api/config`)
+      .then((res) => (res.ok ? (res.json() as Promise<UiConfig>) : null))
+      .catch(() => null);
+  }
+  return uiConfig;
+}

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { fetchUiConfig } from "../api";
 import type { ChatItem } from "../types";
 import { TemporalMark } from "./TemporalLogo";
 
@@ -27,7 +29,21 @@ const STATUS_LABEL: Record<string, string> = {
 export function TransferPlanCard({ item, onDecide }: Props) {
   const { event, state, result } = item;
   const plan = event.plan;
-  const workflowUrl = `${TEMPORAL_UI}/namespaces/${TEMPORAL_NAMESPACE}/workflows/${event.workflow_id}`;
+  // Runtime values from the API win over the build-time defaults, so one image
+  // links to the right namespace wherever it is deployed.
+  const [ui, setUi] = useState({ url: TEMPORAL_UI, namespace: TEMPORAL_NAMESPACE });
+  useEffect(() => {
+    let live = true;
+    fetchUiConfig().then((c) => {
+      if (live && c?.temporal_ui_url && c.temporal_ui_namespace) {
+        setUi({ url: c.temporal_ui_url.replace(/\/+$/, ""), namespace: c.temporal_ui_namespace });
+      }
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+  const workflowUrl = `${ui.url}/namespaces/${encodeURIComponent(ui.namespace)}/workflows/${encodeURIComponent(event.workflow_id)}`;
   const settledStatus = result?.status ?? "";
   const isComplete = settledStatus === "completed";
   const isFailed = settledStatus === "failed" || settledStatus === "expired";

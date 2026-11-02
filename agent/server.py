@@ -6,6 +6,7 @@ Endpoints:
   POST /api/transfer/decision         approve or decline a pending transfer (deterministic)
   GET  /api/accounts                  demo account balances for the UI panel
   GET  /api/transactions              recent ledger entries (money workflows moved)
+  GET  /api/config                    Temporal UI base + namespace for workflow links
   GET  /health
 
 The decision endpoint is the guardrail in action: approving a transfer is a
@@ -86,6 +87,20 @@ def _session(session_id: str | None) -> tuple[str, Session]:
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/api/config")
+async def ui_config() -> dict[str, str | None]:
+    """Temporal UI base and namespace for the UI's workflow links, read at runtime.
+
+    tmprl-demo.cloud injects TEMPORAL_UI_URL (the UI base, e.g. https://cloud.temporal.io)
+    and TEMPORAL_UI_NAMESPACE (the qualified namespace; TEMPORAL_NAMESPACE is the proxy's
+    "default"). When either is unset the UI keeps its build-time VITE_* values.
+    """
+    return {
+        "temporal_ui_url": os.environ.get("TEMPORAL_UI_URL"),
+        "temporal_ui_namespace": os.environ.get("TEMPORAL_UI_NAMESPACE"),
+    }
 
 
 @app.get("/api/accounts")

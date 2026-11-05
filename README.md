@@ -134,8 +134,10 @@ via `uv run --env-file .env` — and **rebuild** (`npm run build`, or restart
 For local dev you don't need any of them: the defaults match
 `temporal server start-dev`.
 
-To make the transfer card's workflow link open in **Temporal Cloud** instead of
-localhost, set both in `web/.env` and rebuild:
+On the demo platform the transfer card's workflow link needs none of this: the API
+reads the injected `TEMPORAL_UI_URL` and `TEMPORAL_UI_NAMESPACE` at runtime
+(`GET /api/config`), and those win over the `VITE_*` values. To make the link open in
+**Temporal Cloud** instead of localhost anywhere else, set both in `web/.env` and rebuild:
 
 ```bash
 # web/.env

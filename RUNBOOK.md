@@ -370,7 +370,7 @@ When someone asks what they'd change for their own system, these are the parts t
 | The assistant says the transfer is done, but there's no card | The model answered without calling `initiate_transfer` | Nothing moved; the rail proves it. Ask it again to send the money; that's a good moment to point out the balances didn't change |
 | The happy path comes back invalid, "short of the … needed" | 85-150 has been drained by earlier runs | Reset the bank locally, or move money back from 43-812 on the hosted demo |
 | Tapping a card gives "I couldn't reach the service to record that decision…" while everything is running | The card is more than 10 minutes old. The transfer expired and its Workflow closed, and the API reports the refused Update as an error. The card doesn't update itself when it expires | Start a new transfer |
-| The workflow link opens the wrong Temporal UI or Namespace | `VITE_TEMPORAL_UI` and `VITE_TEMPORAL_NAMESPACE` are baked into the UI at build time | Set them in `web/.env` and restart `npm run dev`, or rebuild the image |
+| The workflow link opens the wrong Temporal UI or Namespace | `GET /api/config` sets the link from `TEMPORAL_UI_URL` and `TEMPORAL_UI_NAMESPACE`; without both, the UI uses the `VITE_TEMPORAL_UI` and `VITE_TEMPORAL_NAMESPACE` baked in at build time | Set the two runtime variables on the API, or set the `VITE_*` values in `web/.env` and restart `npm run dev` or rebuild the image |
 | With `USE_NEXUS=true`: `Workflow class StartTransferWorkflow is not registered on this worker` | The API has the flag but the worker doesn't | Restart the worker with `--env-file .env` |
 
 ## Keeping this runbook current

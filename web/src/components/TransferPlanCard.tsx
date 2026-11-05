@@ -5,8 +5,8 @@ import { TemporalMark } from "./TemporalLogo";
 
 const TEMPORAL_UI =
   import.meta.env.VITE_TEMPORAL_UI ?? "http://localhost:8233";
-// On Temporal Cloud the namespace is `<namespace>.<accountId>`; locally it's
-// `default`. Build-time var, baked into the bundle (see web/.env.example).
+// Build-time fallbacks for local dev (see web/.env.example). A deployed app gets both
+// at runtime from GET /api/config.
 const TEMPORAL_NAMESPACE =
   import.meta.env.VITE_TEMPORAL_NAMESPACE ?? "default";
 
